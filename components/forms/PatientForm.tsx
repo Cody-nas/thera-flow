@@ -5,7 +5,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import CustomFormField from "@/components/CustomFormField";
+import CustomFormField from "@/components/ui/CustomFormField";
+import SubmitButton from "../ui/SubmitButton";
+import { useState } from "react";
+import { UserFormValidation } from "@/lib/validation";
+import { useRouter } from "next/navigation";
 
 // Enum defining different types of form fields
 export enum FormFieldtype {
@@ -18,31 +22,34 @@ export enum FormFieldtype {
   SKELETON = "skeleton",
 }
 
-// ✅ 1. Define validation schema for form fields using Zod
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(2, { message: "Username must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  phone: z
-    .string()
-    .min(10, { message: "Phone number must be at least 10 digits." }),
-});
-
 const PatientForm = () => {
+  const router = useRouter(); // Router for navigation
+  const [isLoading, setIsLoading] = useState(false); // State to manage loading status
+
   // ✅ 2. Initialize the form with default values and validation
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof UserFormValidation>>({
+    resolver: zodResolver(UserFormValidation),
     defaultValues: {
-      username: "", // Ensures controlled input
+      name: "", // Ensures controlled input
       email: "", // Prevents undefined values
       phone: "", // Avoids uncontrolled behavior
     },
   });
 
   // ✅ 3. Handle form submission
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values); // Log submitted form values
+  async function onSubmit({
+    name,
+    email,
+    phone,
+  }: z.infer<typeof UserFormValidation>) {
+    setIsLoading(true);
+    try {
+      // const userData = { name, email, phone };
+      // const user = await createUser(userData); // Function to create user in the database
+      // if (user) router.push(`/patient/${user.id}`);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -86,7 +93,7 @@ const PatientForm = () => {
         />
 
         {/* Submit button for the form */}
-        <Button type="submit">Submit</Button>
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   );
