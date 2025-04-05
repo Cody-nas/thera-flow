@@ -3,13 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+
 import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/ui/CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
 import { useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
+import { createUser } from "@/lib/actions/patient.action";
 
 // Enum defining different types of form fields
 export enum FormFieldtype {
@@ -37,20 +38,27 @@ const PatientForm = () => {
   });
 
   // ✅ 3. Handle form submission
-  async function onSubmit({
-    name,
-    email,
-    phone,
-  }: z.infer<typeof UserFormValidation>) {
+  const onSubmit = async (values: z.infer<typeof UserFormValidation>) => {
     setIsLoading(true);
+
     try {
-      // const userData = { name, email, phone };
-      // const user = await createUser(userData);
-      // if (user) router.push(`/patient/${user.id}/register`);
+      const user = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+      };
+
+      const newUser = await createUser(user);
+
+      if (newUser) {
+        router.push(`/patients/${newUser.$id}/register`);
+      }
     } catch (error) {
       console.log(error);
     }
-  }
+
+    setIsLoading(false);
+  };
 
   return (
     <Form {...form}>
@@ -65,7 +73,7 @@ const PatientForm = () => {
         <CustomFormField
           fieldType={FormFieldtype.INPUT}
           control={form.control}
-          name="username" // ✅ Matches schema
+          name="name" // ✅ Matches schema
           label="Full Name"
           placeholder="John Doe"
           iconSrc="/assets/icons/user.svg"

@@ -20,7 +20,7 @@ interface CustomProps {
   control: Control<any>; // React Hook Form control object for handling form state
   fieldType: FormFieldtype; // Defines the type of input field (text, phone, etc.)
   name: string; // Name of the input field (used for form state management)
-  label: string; // Label text displayed for the input field
+  label?: string; // Label text displayed for the input field
   placeholder?: string; // Optional placeholder text
   iconSrc?: string; // Optional icon source for the input field
   iconAlt?: string; // Alternative text for the icon

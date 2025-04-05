@@ -5,9 +5,10 @@ import { z } from "zod";
 export const UserFormValidation = z.object({
   name: z
     .string()
-    .min(2, { message: "Username must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be at most 50 characters"),
+  email: z.string().email("Invalid email address"),
   phone: z
     .string()
-    .min(10, { message: "Phone number must be at least 10 digits." }),
+    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
 });
