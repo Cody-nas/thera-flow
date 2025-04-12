@@ -17,6 +17,7 @@ import PhoneInput from "react-phone-number-input";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./select";
+import { Textarea } from "./textarea";
 
 // Interface defining the properties expected for the custom form field component
 interface CustomProps {
@@ -73,6 +74,19 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
           </FormControl>
         </div>
       );
+
+    case FormFieldtype.TEXTAREA:
+      return (
+        <FormControl>
+          <Textarea
+            placeholder={placeholder}
+            {...field}
+            className="shad-textArea"
+            disabled={props.disabled}
+          />
+        </FormControl>
+      );
+    case FormFieldtype.CHECKBOX:
     case FormFieldtype.PHONE_INPUT:
       return (
         <FormControl>

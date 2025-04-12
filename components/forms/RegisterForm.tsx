@@ -201,18 +201,55 @@ const RegisterForm = ({ user }: { user: User }) => {
           <CustomFormField
             fieldType={FormFieldtype.INPUT}
             control={form.control}
-            name="address"
-            label="Address"
-            placeholder="14th street, portharcourt"
+            name="insuranceProvider"
+            label="Insurance provider"
+            placeholder="Carl Care"
           />
           <CustomFormField
             fieldType={FormFieldtype.INPUT}
             control={form.control}
-            name="occupation"
-            label="Occupation"
-            placeholder="Software Engineer"
+            name="insurancePolicyNumber"
+            label="Insurance policy number"
+            placeholder="ABC123456789"
           />
         </div>
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldtype.TEXTAREA}
+            control={form.control}
+            name="allergies"
+            label="Allergies (if any)"
+            placeholder="Peanuts, Penicillin, etc."
+          />
+          <CustomFormField
+            fieldType={FormFieldtype.TEXTAREA}
+            control={form.control}
+            name="currentMedication"
+            label="Current medication (if any)"
+            placeholder="Aspirin, Ibuprofen 200mg, etc"
+          />
+        </div>
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldtype.TEXTAREA}
+            control={form.control}
+            name="familyMedicalHistory"
+            label="Family medical history "
+            placeholder="Father: Hypertension, Mother: Diabetes, etc."
+          />
+          <CustomFormField
+            fieldType={FormFieldtype.TEXTAREA}
+            control={form.control}
+            name="pastMedicalHistory"
+            label="Past medical history"
+            placeholder="Malaria, Typhoid, etc."
+          />
+        </div>
+        <section className=" space-y-6">
+          <div className="mb-9 space-y-1">
+            <h2 className="sub-header">Identification and Verification</h2>
+          </div>
+        </section>
         {/* Submit button for the form */}
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
