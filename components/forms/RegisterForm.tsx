@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patient.action";
 import { FormFieldtype } from "./PatientForm";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Doctors, GenderOptions } from "@/constants";
+import { Doctors, GenderOptions, IdentificationTypes } from "@/constants";
 import { Label } from "../ui/label";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
@@ -250,6 +250,34 @@ const RegisterForm = ({ user }: { user: User }) => {
             <h2 className="sub-header">Identification and Verification</h2>
           </div>
         </section>
+
+        <CustomFormField
+          fieldType={FormFieldtype.SELECT}
+          control={form.control}
+          name="identificationType"
+          label="Identification type"
+          placeholder="Select an identification type"
+        >
+          {IdentificationTypes.map((type) => (
+            <SelectItem key={type} value={type}>
+              {type}
+            </SelectItem>
+          ))}
+        </CustomFormField>
+        <CustomFormField
+          fieldType={FormFieldtype.INPUT}
+          control={form.control}
+          name="identificationNumber"
+          label="Identification number"
+          placeholder="123456789"
+        />
+        <CustomFormField
+          fieldType={FormFieldtype.SKELETON}
+          control={form.control}
+          name="identificationDocument"
+          label="Scanned copy of identification document"
+          renderSkeleton={(field) => <FormControl></FormControl>}
+        />
         {/* Submit button for the form */}
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
