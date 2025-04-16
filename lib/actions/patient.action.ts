@@ -15,7 +15,6 @@ import { parseStringify } from "../utils";
 import { InputFile } from "node-appwrite/file";
 
 // Create appwrite user
-
 export const createUser = async (user: CreateUserParams) => {
   try {
     const newUser = await users.create(
@@ -25,23 +24,32 @@ export const createUser = async (user: CreateUserParams) => {
       undefined,
       user.name
     );
-  } catch (error: any) {
-    if (error && error?.code === 409) {
-      const documents = await users.list([Query.equal("email", [user.email])]);
 
-      return documents?.users[0];
+    return newUser; // ✅ Return on successful creation
+  } catch (error: any) {
+    if (error?.code === 409) {
+      try {
+        const documents = await users.list([
+          Query.equal("email", [user.email]),
+        ]);
+        return documents?.users?.[0];
+      } catch (innerError) {
+        console.error("Failed to fetch existing user:", innerError);
+      }
     }
+
+    console.error("User creation error:", error);
+    throw error; // optional: rethrow if you want to handle it in the UI
   }
 };
 
 // GetUser
-
 export const getUser = async (userId: string) => {
   try {
     const user = await users.get(userId);
     return parseStringify(user);
   } catch (error) {
-    console.log(error);
+    console.error("Failed to get user:", error);
   }
 };
 
@@ -51,28 +59,26 @@ export const registerPatient = async ({
   ...patient
 }: RegisterUserParams) => {
   try {
-    // Upload file ->  // https://appwrite.io/docs/references/cloud/client-web/storage#createFile
     let file;
+
     if (identificationDocument) {
-      const inputFile =
-        identificationDocument &&
-        InputFile.fromBuffer(
-          identificationDocument?.get("blobFile") as Blob,
-          identificationDocument?.get("fileName") as string
-        );
+      const inputFile = InputFile.fromBuffer(
+        identificationDocument.get("blobFile") as Blob,
+        identificationDocument.get("fileName") as string
+      );
 
       file = await storage.createFile(BUCKET_ID!, ID.unique(), inputFile);
     }
 
-    // Create new patient document -> https://appwrite.io/docs/references/cloud/server-nodejs/databases#createDocument
     const newPatient = await databases.createDocument(
       DATABASE_ID!,
       PATIENT_COLLECTION_ID!,
       ID.unique(),
       {
         identificationDocumentId: file?.$id || null,
-        identificationDocumentUrl: `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file?.$id}/view??project=${PROJECT_ID}`,
-
+        identificationDocumentUrl: file
+          ? `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file.$id}/view?project=${PROJECT_ID}`
+          : null,
         ...patient,
       }
     );
