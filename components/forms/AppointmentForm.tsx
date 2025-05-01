@@ -188,6 +188,6 @@ const AppointmentForm = ({
 };
 
 export default AppointmentForm;
-function CreateAppointment(appointmentData: any) {
-  throw new Error("Function not implemented.");
-}
+// function CreateAppointment(appointmentData: any) {
+//   throw new Error("Function not implemented.");
+// }
